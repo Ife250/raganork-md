@@ -1,8 +1,17 @@
-FROM fusuf/whatsasena:latest
+FROM node:lts-buster
 
-RUN git clone https://github.com/souravkl11/raganork-md /skl/Raganork
-WORKDIR /skl/Raganork
-ENV TZ=Asia/Kolkata
-RUN npm install supervisor -g
-RUN yarn install --ignore-engines
-CMD ["node", "index.js"]
+RUN apt-get update && \
+  apt-get install -y \
+  ffmpeg \
+  imagemagick \
+  webp && \
+  apt-get upgrade -y && \
+  rm -rf /var/lib/apt/lists/*
+
+COPY package.json .
+
+RUN npm install
+
+COPY . .
+
+CMD ["node", "."]
